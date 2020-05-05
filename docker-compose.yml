@@ -1,0 +1,22 @@
+version: '3'
+services:
+  mysql:
+    image: mariadb:10
+    ports:
+      - 8088:3306
+    environment:
+      - MYSQL_DATABASE=warehouse
+      - MYSQL_ROOT_PASSWORD=root
+  warehouse:
+    build: ./
+    volumes:
+      - ./:/var/www
+      - ./docker/apache.conf:/etc/apache2/sites-enabled/000-default.conf
+      - ./docker/php.ini:/usr/local/etc/php/php.ini
+    environment:
+      - DATABASE_URL=mysql://root:root@mysql/warehouse
+      - APP_ENV = dev
+    links:
+      - mysql
+    ports:
+      - 3000:80
