@@ -15,8 +15,21 @@ services:
       - ./docker/php.ini:/usr/local/etc/php/php.ini
     environment:
       - DATABASE_URL=mysql://root:root@mysql/warehouse
-      - APP_ENV = dev
+      - APP_ENV=dev
     links:
       - mysql
     ports:
       - 3000:80
+    entrypoint:
+      - ./docker/entrypoint.sh
+  projection_product:
+    build: ./docker/projection/
+    entrypoint:
+      - ./docker/projection/wait_for_sql.sh
+    volumes:
+      - .:/app
+    depends_on:
+      - warehouse
+    command: php bin/console event-store:projection:run product_projection
+
+

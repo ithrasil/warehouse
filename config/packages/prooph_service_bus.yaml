@@ -1,0 +1,25 @@
+prooph_service_bus:
+    command_buses:
+        default_command_bus: null
+        product_command_bus:
+            router:
+                type: 'prooph_service_bus.command_bus_router'
+                routes:
+                    'App\Product\Domain\Command\AddProduct': App\Product\Domain\Handler\AddProductHandler
+                    'App\Product\Domain\Command\RemoveProduct': App\Product\Domain\Handler\RemoveProductHandler
+                    'App\Product\Domain\Command\ReserveProduct': App\Product\Domain\Handler\ReserveProductHandler
+    event_buses:
+        default_event_bus: null
+    query_buses:
+        default_query_bus: null
+        product_query_bus:
+            router:
+                type: 'prooph_service_bus.query_bus_router'
+                routes:
+                    'App\Product\Domain\Query\GetProducts': App\Product\Domain\Handler\GetProductsHandler
+
+services:
+    _defaults:
+        public: false
+
+    Prooph\ServiceBus\CommandBus: '@prooph_service_bus.default_command_bus'
